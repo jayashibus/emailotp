@@ -1,0 +1,11 @@
+{
+  "name": "emailotp",
+  "version": "1.0.3",
+  "description": "Generate Email OTP for valid email",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jaya Shibu",
+  "license": "ISC"
+}
