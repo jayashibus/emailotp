@@ -1,6 +1,6 @@
 {
   "name": "emailotp",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "Generate Email OTP for valid email",
   "main": "index.js",
   "scripts": {
