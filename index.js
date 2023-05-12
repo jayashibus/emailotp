@@ -33,37 +33,37 @@ function generate_OTP_email(user_email) {
 }
 
 function check_OTP(input) {
-  let otp = input.otp;
+  let enteredOtp = input.otp;
 
   //Tries should store in the database and fetch of every OTP entry
-  let tries = getTries(input.email);
-  const start_time = new Date().getTime();
-  const timeout = 60000;
+  //let tries = getTries(input.email);
 
-  if (tries < 10) {
-    const elapsed_time = new Date().getTime() - start_time;
-    if (elapsed_time >= timeout) {
+  const otpData = JSON.parse(localStorage.getItem("otpData"));
+
+  if (otpData.tries < 10) {
+    const elapsed_time = new Date().getTime();
+    if (elapsed_time >= otpData.expiryTime) {
       return message.CONSTANTS.statusMsg.STATUS_OTP_TIMEOUT;
     }
 
     //Hardcoded stored OTP. Its suppose to fetch from DB
-    stored_otp = getOTP(input.email);
 
-    if (validateOTP(otp) && otp === stored_otp) {
+    if (validateOTP(enteredOtp) && enteredOtp === otpData.otp) {
       return message.CONSTANTS.statusMsg.STATUS_OTP_OK;
     } else {
-      updateTries(input.email);
-      tries++;
-      const remaining_tries = 10 - tries;
+      updateTries(otpData.email);
+      otpData.tries++;
+      const remaining_tries = 10 - otpData.tries;
       if (remaining_tries === 0) {
         return message.CONSTANTS.statusMsg.STATUS_OTP_FAIL;
       } else {
-        console.log(`Invalid OTP code. ${remaining_tries} tries remaining.`);
+        return `Invalid OTP code. ${remaining_tries} tries remaining.`;
+        // console.log(`Invalid OTP code. ${remaining_tries} tries remaining.`);
       }
     }
   }
 
-  return message.CONSTANTS.statusMsg.STATUS_OTP_FAIL;
+  //return message.CONSTANTS.statusMsg.STATUS_OTP_FAIL;
 }
 
 function storeOTP(email, otp) {
@@ -79,12 +79,15 @@ function storeOTP(email, otp) {
 function getOTP(email) {
   // implement get OTP  logic here
   const otpData = JSON.parse(localStorage.getItem("otpData"));
+  console.log("Get OTP ", otpData);
   if (
     otpData &&
     otpData.email === email &&
     otpData.expiryTime > new Date().getTime()
   ) {
-    return otpData.otp;
+    console.log("OTP", otpData.otp);
+
+    return otpData;
   } else {
     return null;
   }
@@ -108,11 +111,13 @@ function updateTries(email) {
 function getTries(email) {
   // implement get OTP  logic here
   const otpData = JSON.parse(localStorage.getItem("otpData"));
+
   if (
     otpData &&
     otpData.email === email &&
     otpData.expiryTime > new Date().getTime()
   ) {
+    console.log("Tries", otpData.tries);
     return otpData.tries;
   } else {
     return null;

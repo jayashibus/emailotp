@@ -52,11 +52,7 @@ tester2@dso.org.sg.yahoo.com,
 tester2@yahoo.com,
 ```
 
-### Assume Valid OTP
-
-```sh
-173923
-```
+ß
 
 You can pass the valid OTP in below format for testing
 
