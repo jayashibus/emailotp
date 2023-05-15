@@ -2,21 +2,15 @@ const message = require("./constants");
 
 function generate_OTP_email(user_email) {
   // // Validate email domain
-  // if (!user_email.endsWith("@dso.org.sg")) {
-  //   return message.CONSTANTS.statusMsg.STATUS_EMAIL_INVALID;
-  // }
 
-  //
-  // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // if (!regex.test(user_email)) {
-  //   return message.CONSTANTS.statusMsg.STATUS_EMAIL_INVALID;
-  // }
-
-  // Validate email address and Validate email domain and check special charactor
-
-  const regex = /^[a-zA-Z0-9._%+-]+@(dso\.org\.sg)$/i;
-  if (!regex.test(user_email)) {
-    return message.CONSTANTS.statusMsg.STATUS_EMAIL_INVALID;
+  // Validate email domain,length sub domain, Symbols, domain
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (
+    user_email.length < 1 ||
+    user_email.length > 60 ||
+    !regex.test(user_email)
+  ) {
+    return CONSTANTS.statusMsg.STATUS_EMAIL_INVALID;
   }
 
   const otp = String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
@@ -73,7 +67,7 @@ function storeOTP(email, otp) {
   const otpData = { email, otp, expiryTime, tries };
   localStorage.setItem("otpData", JSON.stringify(otpData));
 
-  console.log(localStorage.getItem("otpData")); // should log the OTP data object
+  // console.log(localStorage.getItem("otpData")); // should log the OTP data object
 }
 
 function getOTP(email) {
@@ -135,7 +129,6 @@ function validateOTP(otp) {
 // }
 
 function send_email(email_address, email_body) {
-  console.log(email_address);
   console.log(email_body);
 
   return true;
